@@ -16,6 +16,25 @@ describe Admin::CategoriesController do
     assert_response :redirect, :action => 'index'
   end
 
+ describe "test_new" do
+    before(:each) do
+      get :edit, :id => Factory(:category).id
+    end
+
+    it 'should render template new' do
+      assert_template 'new'
+      assert_tag :tag => "table",
+        :attributes => { :id => "category_container" }
+    end
+
+    it 'should have valid category' do
+      assigns(:category).should_not be_nil
+      assert assigns(:category).valid?
+      assigns(:categories).should_not be_nil
+    end
+  end
+
+
   describe "test_edit" do
     before(:each) do
       get :edit, :id => Factory(:category).id
@@ -31,6 +50,29 @@ describe Admin::CategoriesController do
       assigns(:category).should_not be_nil
       assert assigns(:category).valid?
       assigns(:categories).should_not be_nil
+    end
+  end
+
+describe "test_new" do
+    before(:each) do
+      get :new
+    end
+
+    it 'should render template new with empty values' do
+      assert_template 'new'
+      assert_tag :tag => "table",
+        :attributes => {}
+    end
+  end
+
+  describe "test_create" do
+    before(:each) do
+      post :new, :id => Factory(:category).id
+    end
+
+    it "shoud create new category and go to index page" do
+      assert_response :redirect, :action => 'index'
+      (Category.count).should == 1
     end
   end
 
